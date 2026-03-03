@@ -7,7 +7,7 @@
  *  @license
  */
 
-import { LitElement, html } from "lit";
+import { LitElement, html, nothing } from "lit";
 import { property } from "lit/decorators.js";
 import prefix from "../../../globals/settings.js";
 import { carbonElement } from "../../../globals/decorators/carbon-element.js";
@@ -15,7 +15,6 @@ import { carbonElement } from "../../../globals/decorators/carbon-element.js";
 import "@carbon/web-components/es/components/icon-button/index.js";
 import { iconLoader } from "@carbon/web-components/es/globals/internal/icon-loader.js";
 import ChevronLeft16 from "@carbon/icons/es/chevron--left/16.js";
-import SidePanelClose16 from "@carbon/icons/es/side-panel--close/16.js";
 import styles from "./chat-history.scss?lit";
 
 /**
@@ -37,13 +36,6 @@ class CDSAIChatHistoryHeader extends LitElement {
    */
   @property({ type: String, reflect: true })
   title = "Conversations";
-
-  /**
-   * `true` if chat history is placed in start / left side panel next to chat
-   *  will render the close chat history button with side-panel-close icon instead
-   */
-  @property({ type: Boolean, attribute: "start-panel", reflect: true })
-  startPanel = false;
 
   /**
    * Label for close chat history button.
@@ -84,24 +76,22 @@ class CDSAIChatHistoryHeader extends LitElement {
       closeButtonLabel,
       showCloseAction,
       title,
-      startPanel,
       _handleCloseButtonClick: handleCloseButtonClick,
       _handleCloseButtonKeyDown: handleCloseButtonKeyDown,
     } = this;
 
     return html`
-      ${showCloseAction &&
-      html`<cds-icon-button
-        class="${prefix}--history-header__close-button"
-        kind="ghost"
-        @click=${handleCloseButtonClick}
-        @keydown=${handleCloseButtonKeyDown}
-      >
-        ${startPanel
-          ? iconLoader(SidePanelClose16, { slot: "icon" })
-          : iconLoader(ChevronLeft16, { slot: "icon" })}
-        <span slot="tooltip-content">${closeButtonLabel}</span>
-      </cds-icon-button>`}
+      ${showCloseAction
+        ? html`<cds-icon-button
+            class="${prefix}--history-header__close-button"
+            kind="ghost"
+            @click=${handleCloseButtonClick}
+            @keydown=${handleCloseButtonKeyDown}
+          >
+            ${iconLoader(ChevronLeft16, { slot: "icon" })}
+            <span slot="tooltip-content">${closeButtonLabel}</span>
+          </cds-icon-button>`
+        : nothing}
       <span class="${prefix}--history-header__title">${title}</span>
     `;
   }

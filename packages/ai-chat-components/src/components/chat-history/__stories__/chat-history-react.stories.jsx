@@ -20,6 +20,7 @@ import {
   HistoryPanelItem,
   HistoryPanelItems,
   HistorySearchItem,
+  HistoryDeletePanel,
 } from "../../../react/history";
 import "./story-styles.scss";
 
@@ -50,14 +51,27 @@ export const Default = {
       control: "text",
       description: "Header title text of the chat history shell",
     },
+    searchOff: {
+      control: "boolean",
+      description:
+        "true if search should be turned off in chat history toolbar.",
+    },
+    showCloseAction: {
+      control: "boolean",
+      description: "renders close chat history action in header.",
+    },
   },
   args: {
     HeaderTitle: "Conversations",
+    searchOff: false,
+    showCloseAction: true,
   },
   render: (args) => {
     const [searchResults, setSearchResults] = useState([]);
     const [searchTotalCount, setSearchTotalCount] = useState(0);
     const [searchValue, setSearchValue] = useState("");
+    const [showDeletePanel, setShowDeletePanel] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
     const [pinnedItems, setPinnedItems] = useState(
       pinnedHistoryItems.map((item) => ({ ...item, rename: false })),
     );
@@ -69,14 +83,43 @@ export const Default = {
     );
 
     const handleHistoryItemAction = useCallback((event) => {
-      // Handle rename action
-      if (event.detail.action === "Rename") {
+      const action = event.detail.action;
+
+      if (action === "Delete") {
+        setItemToDelete(event.detail.itemId);
+        setShowDeletePanel(true);
+      } else if (action === "Rename") {
         const element = event.detail.element;
         if (element) {
           element.rename = true;
         }
       }
     }, []);
+
+    const handleDeleteCancel = useCallback(() => {
+      setShowDeletePanel(false);
+      setItemToDelete(null);
+    }, []);
+
+    const handleDeleteConfirm = useCallback(() => {
+      if (itemToDelete) {
+        // Remove from pinned items
+        setPinnedItems((prev) =>
+          prev.filter((item) => item.id !== itemToDelete),
+        );
+
+        // Remove from regular items
+        setRegularItems((prev) =>
+          prev.map((section) => ({
+            ...section,
+            chats: section.chats.filter((chat) => chat.id !== itemToDelete),
+          })),
+        );
+      }
+
+      setShowDeletePanel(false);
+      setItemToDelete(null);
+    }, [itemToDelete]);
 
     const handleSearchInput = useCallback((event) => {
       const searchVal = event.detail.value.toLowerCase();
@@ -117,8 +160,14 @@ export const Default = {
 
     return (
       <HistoryShell>
-        <HistoryHeader title={args.HeaderTitle} />
-        <HistoryToolbar onCdsSearchInput={handleSearchInput} />
+        <HistoryHeader
+          title={args.HeaderTitle}
+          showCloseAction={args.showCloseAction}
+        />
+        <HistoryToolbar
+          searchOff={args.searchOff}
+          onCdsSearchInput={handleSearchInput}
+        />
         <HistoryContent>
           {(showSearchResults || noSearchResults) && (
             <div slot="results-count">Results: {searchTotalCount}</div>
@@ -158,7 +207,7 @@ export const Default = {
                         selected={item.selected}
                         rename={item.rename}
                         actions={pinnedHistoryItemActions}
-                        onHistoryItemAction={handleHistoryItemAction}
+                        onHistoryItemMenuAction={handleHistoryItemAction}
                       />
                     ))}
                   </HistoryPanelMenu>
@@ -176,7 +225,7 @@ export const Default = {
                           title={chat.title}
                           rename={chat.rename}
                           actions={historyItemActions}
-                          onHistoryItemAction={handleHistoryItemAction}
+                          onHistoryItemMenuAction={handleHistoryItemAction}
                         />
                       ))}
                     </HistoryPanelMenu>
@@ -186,6 +235,17 @@ export const Default = {
             </HistoryPanelItems>
           </HistoryPanel>
         </HistoryContent>
+        {showDeletePanel && (
+          <HistoryDeletePanel
+            onHistoryDeleteCancel={handleDeleteCancel}
+            onHistoryDeleteConfirm={handleDeleteConfirm}
+          >
+            <div slot="title">Confirm Delete</div>
+            <div slot="description">
+              This conversation will be permanently deleted.
+            </div>
+          </HistoryDeletePanel>
+        )}
       </HistoryShell>
     );
   },
@@ -255,6 +315,61 @@ export const EmptyState = {
         <HistoryContent>
           <div slot="results-count">No available chats</div>
         </HistoryContent>
+      </HistoryShell>
+    );
+  },
+};
+
+export const DeleteFlow = {
+  args: {
+    HeaderTitle: "Chats",
+  },
+  render: (args) => {
+    return (
+      <HistoryShell>
+        <HistoryHeader title={args.HeaderTitle} />
+        <HistoryToolbar />
+        <HistoryContent>
+          <HistoryPanel aria-label="Chat history">
+            <HistoryPanelItems>
+              <HistoryPanelMenu expanded title="Pinned">
+                <PinFilled slot="title-icon" />
+                {pinnedHistoryItems.map((item) => (
+                  <HistoryPanelItem
+                    key={item.id}
+                    id={item.id}
+                    title={item.title}
+                    selected={item.selected}
+                    actions={pinnedHistoryItemActions}
+                  />
+                ))}
+              </HistoryPanelMenu>
+              {historyItems.map((item) => (
+                <HistoryPanelMenu
+                  key={item.section}
+                  expanded
+                  title={item.section}
+                >
+                  <Search slot="title-icon" />
+                  {item.chats.map((chat) => (
+                    <HistoryPanelItem
+                      key={chat.id}
+                      id={chat.id}
+                      title={chat.title}
+                      actions={historyItemActions}
+                    />
+                  ))}
+                </HistoryPanelMenu>
+              ))}
+            </HistoryPanelItems>
+          </HistoryPanel>
+        </HistoryContent>
+        <HistoryDeletePanel>
+          <div slot="title">Confirm Delete</div>
+          <div slot="description">
+            This conversation will be permanently deleted.
+          </div>
+        </HistoryDeletePanel>
       </HistoryShell>
     );
   },
