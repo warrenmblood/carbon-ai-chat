@@ -6,44 +6,43 @@
  *
  *  @license
  */
-import { action } from "storybook/actions";
-import { iconLoader } from "@carbon/web-components/es/globals/internal/icon-loader.js";
-import Delete16 from "@carbon/icons/es/delete/16.js";
-import Time16 from "@carbon/icons/es/time/16.js";
+// import { iconLoader } from "@carbon/web-components/es/globals/internal/icon-loader.js";
+// import Delete16 from "@carbon/icons-react/es/delete/16.js";
+// import Time16 from "@carbon/icons-react/es/time/16.js";
 
 export const historyItemActions = [
   {
     text: "Pin to top",
-    onClick: action("onClick"),
+    //onClick: action("onClick"),
   },
   {
     text: "Rename",
-    onClick: action("onClick"),
+    //onClick: action("onClick"),
   },
   {
     text: "Delete",
     delete: true,
     divider: true,
-    icon: iconLoader(Delete16, { slot: "icon" }),
-    onClick: action("onClick"),
+    //icon: iconLoader(Delete16, { slot: "icon" }),
+    //onClick: action("onClick"),
   },
 ];
 
 export const pinnedHistoryItemActions = [
   {
     text: "Unpin",
-    onClick: action("onClick"),
+    //onClick: action("onClick"),
   },
   {
     text: "Rename",
-    onClick: action("onClick"),
+    //onClick: action("onClick"),
   },
   {
     text: "Delete",
     delete: true,
     divider: true,
-    icon: iconLoader(Delete16, { slot: "icon" }),
-    onClick: action("onClick"),
+    // icon: iconLoader(Delete16, { slot: "icon" }),
+    // onClick: action("onClick"),
   },
 ];
 
@@ -75,7 +74,7 @@ export const pinnedHistoryItems = [
 export const historyItems = [
   {
     section: "Today",
-    icon: iconLoader(Time16, { slot: "title-icon" }),
+    //icon: iconLoader(Time16, { slot: "title-icon" }),
     chats: [
       {
         id: "today-0",
@@ -102,7 +101,7 @@ export const historyItems = [
   },
   {
     section: "Yesterday",
-    icon: iconLoader(Time16, { slot: "title-icon" }),
+    //icon: iconLoader(Time16, { slot: "title-icon" }),
     chats: [
       {
         id: "yesterday-0",
@@ -129,7 +128,7 @@ export const historyItems = [
   },
   {
     section: "Previous 7 days",
-    icon: iconLoader(Time16, { slot: "title-icon" }),
+    //icon: iconLoader(Time16, { slot: "title-icon" }),
     chats: [
       {
         id: "previous-0",

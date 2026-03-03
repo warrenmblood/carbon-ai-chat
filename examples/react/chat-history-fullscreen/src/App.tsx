@@ -10,7 +10,7 @@
 import {
   BusEventType,
   CarbonTheme,
-  ChatContainer,
+  ChatCustomElement,
   ChatInstance,
   FeedbackInteractionType,
   PublicConfig,
@@ -20,6 +20,9 @@ import { createRoot } from "react-dom/client";
 
 // These functions hook up to your back-end.
 import { customSendMessage } from "./customSendMessage";
+// This function returns a React component for user defined responses.
+import { renderUserDefinedResponseFactory } from "./renderUserDefinedResponse";
+import { ChatHistoryExample } from "./ChatHistoryExample";
 
 /**
  * It is preferable to create your configuration object outside of your React functions. You can also make use of
@@ -32,20 +35,24 @@ const config: PublicConfig = {
   messaging: {
     customSendMessage,
   },
- layout: {
+  layout: {
     showFrame: false,
     customProperties: {
       "messages-max-width": `max(60vw, 672px)`,
     },
+    showHistory: true,
   },
   openChatByDefault: true,
   injectCarbonTheme: CarbonTheme.WHITE,
 };
 
 function App() {
+  const [instance, setInstance] = useState<ChatInstance | null>(null);
   const [activeResponseId, setActiveResponseId] = useState<string | null>(null);
 
   function onBeforeRender(instance: ChatInstance) {
+    setInstance(instance);
+
     const initialState = instance.getState();
     setActiveResponseId(initialState.activeResponseId ?? null);
 
@@ -78,11 +85,29 @@ function App() {
     }
   }
 
+  const renderUserDefinedResponse = useMemo(
+    () => renderUserDefinedResponseFactory(activeResponseId),
+    [activeResponseId],
+  );
+
+  const renderWriteableElements = useMemo(() => {
+    if (!instance) {
+      return { historyPanelElement: null };
+    }
+
+    const component = <ChatHistoryExample headerTitle="Conversations" />;
+
+    return { historyPanelElement: component };
+  }, [instance]);
+
   return (
-    <ChatContainer
+    <ChatCustomElement
+      className="chat-custom-element"
       {...config}
       // Set the instance into state for usage.
       onBeforeRender={onBeforeRender}
+      renderUserDefinedResponse={renderUserDefinedResponse}
+      renderWriteableElements={renderWriteableElements}
     />
   );
 }

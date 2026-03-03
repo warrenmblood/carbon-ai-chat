@@ -1,9 +1,9 @@
 {
-  "name": "@carbon/ai-chat-examples-react-basic",
+  "name": "@carbon/ai-chat-examples-react-chat-history-fullscreen",
   "private": true,
   "version": "1.7.0",
   "type": "module",
-  "description": "A basic example using @carbon/ai-chat as a React component.",
+  "description": "An example using @carbon/ai-chat React chat history feature with fullscreen layout",
   "scripts": {
     "start": "cross-env ENVIRONMENT=development webpack serve --config ./webpack.config.js",
     "build": "webpack --config ./webpack.config.js",
@@ -14,6 +14,9 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "dependencies": {
     "@carbon/ai-chat": "^1.7.0",
+    "@carbon/ai-chat-components": "^0.9.0",
+    "@carbon/icons-react": "^11.53.0",
+    "@carbon/react": "^1.68.0",
     "@carbon/web-components": "^2.46.0",
     "lit": "^3.1.0",
     "react": "^19.0.0",
