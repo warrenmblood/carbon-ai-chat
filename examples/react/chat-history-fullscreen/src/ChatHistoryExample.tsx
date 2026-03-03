@@ -18,6 +18,7 @@ import {
   HistoryPanelItem,
   HistoryPanelItems,
   HistorySearchItem,
+  HistoryDeletePanel,
 } from "@carbon/ai-chat-components/es/react/history";
 import {
   historyItemActions,
@@ -39,12 +40,20 @@ interface resultItem {
 
 interface ChatHistoryExampleProps {
   headerTitle: string;
+  searchOff: boolean;
+  showCloseAction: boolean;
 }
 
-function ChatHistoryExample({ headerTitle }: ChatHistoryExampleProps) {
+function ChatHistoryExample({
+  headerTitle,
+  searchOff,
+  showCloseAction,
+}: ChatHistoryExampleProps) {
   const [searchResults, setSearchResults] = useState<resultItem[]>([]);
   const [searchTotalCount, setSearchTotalCount] = useState(0);
   const [searchValue, setSearchValue] = useState("");
+  const [showDeletePanel, setShowDeletePanel] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   const [pinnedItems, setPinnedItems] = useState(
     pinnedHistoryItems.map((item) => ({ ...item, rename: false })),
   );
@@ -56,14 +65,41 @@ function ChatHistoryExample({ headerTitle }: ChatHistoryExampleProps) {
   );
 
   const handleHistoryItemAction = useCallback((event: any) => {
-    // Handle rename action
-    if (event.detail!.action === "Rename") {
+    const action = event.detail.action;
+
+    if (action === "Delete") {
+      setItemToDelete(event.detail.itemId);
+      setShowDeletePanel(true);
+    } else if (action === "Rename") {
       const element = event.detail.element;
       if (element) {
         element.rename = true;
       }
     }
   }, []);
+
+  const handleDeleteCancel = useCallback(() => {
+    setShowDeletePanel(false);
+    setItemToDelete(null);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(() => {
+    if (itemToDelete) {
+      // Remove from pinned items
+      setPinnedItems((prev) => prev.filter((item) => item.id !== itemToDelete));
+
+      // Remove from regular items
+      setRegularItems((prev) =>
+        prev.map((section) => ({
+          ...section,
+          chats: section.chats.filter((chat) => chat.id !== itemToDelete),
+        })),
+      );
+    }
+
+    setShowDeletePanel(false);
+    setItemToDelete(null);
+  }, [itemToDelete]);
 
   const handleSearchInput = useCallback((event: any) => {
     const searchVal = event.detail.value.toLowerCase();
@@ -104,9 +140,12 @@ function ChatHistoryExample({ headerTitle }: ChatHistoryExampleProps) {
 
   return (
     <HistoryShell className='history-shell'>
-      <HistoryHeader title={headerTitle} />
-      <HistoryToolbar onCdsSearchInput={handleSearchInput} />
-      <HistoryContent>
+      <HistoryHeader title={headerTitle} showCloseAction={showCloseAction} />
+      <HistoryToolbar
+        searchOff={searchOff}
+        onCdsSearchInput={handleSearchInput}
+      />
+      <HistoryContent className="history-content">
         {(showSearchResults || noSearchResults) && (
           <div slot="results-count">Results: {searchTotalCount}</div>
         )}
@@ -142,7 +181,7 @@ function ChatHistoryExample({ headerTitle }: ChatHistoryExampleProps) {
                       selected={item.selected}
                       rename={item.rename}
                       actions={pinnedHistoryItemActions}
-                      onHistoryItemAction={handleHistoryItemAction}
+                      onHistoryItemMenuAction={handleHistoryItemAction}
                     />
                   ))}
                 </HistoryPanelMenu>
@@ -160,7 +199,7 @@ function ChatHistoryExample({ headerTitle }: ChatHistoryExampleProps) {
                         title={chat.title}
                         rename={chat.rename}
                         actions={historyItemActions}
-                        onHistoryItemAction={handleHistoryItemAction}
+                        onHistoryItemMenuAction={handleHistoryItemAction}
                       />
                     ))}
                   </HistoryPanelMenu>
@@ -170,6 +209,17 @@ function ChatHistoryExample({ headerTitle }: ChatHistoryExampleProps) {
           </HistoryPanelItems>
         </HistoryPanel>
       </HistoryContent>
+      {showDeletePanel && (
+        <HistoryDeletePanel
+          onHistoryDeleteCancel={handleDeleteCancel}
+          onHistoryDeleteConfirm={handleDeleteConfirm}
+        >
+          <div slot="title">Confirm Delete</div>
+          <div slot="description">
+            This conversation will be permanently deleted.
+          </div>
+        </HistoryDeletePanel>
+      )}
     </HistoryShell>
   );
 }
