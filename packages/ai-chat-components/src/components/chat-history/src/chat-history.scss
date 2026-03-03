@@ -14,7 +14,7 @@
 
 :host(#{$prefix}-history-shell) {
   position: relative;
-  z-index: 1;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   border: solid convert.rem(1px) theme.$border-subtle-00;
@@ -70,7 +70,8 @@
 
 :host(#{$prefix}-history-content) {
   display: block;
-  block-size: 100%;
+  flex: 1;
+  min-block-size: 0;
   overflow-y: auto;
 
   .#{$prefix}--history-content__results-count {
@@ -99,17 +100,25 @@
 }
 
 :host(#{$prefix}-history-panel) {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  overflow: hidden;
+
   .cds--side-nav {
     position: relative;
     background-color: transparent;
     inline-size: 100%;
     max-inline-size: 100%;
+    block-size: 100%;
+    overflow: hidden;
   }
 }
 
 :host(#{$prefix}-history-panel[expanded])
   ::slotted(#{$cds-prefix}-side-nav-items) {
   overflow-y: auto;
+  block-size: 100%;
 }
 
 :host(#{$prefix}-history-panel-items) {
@@ -117,6 +126,8 @@
 
   position: relative;
   padding: 0;
+  block-size: 100%;
+  overflow-y: auto;
 }
 
 :host(#{$prefix}-history-panel-menu) {

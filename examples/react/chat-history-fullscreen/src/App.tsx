@@ -95,7 +95,7 @@ function App() {
       return { historyPanelElement: null };
     }
 
-    const component = <ChatHistoryExample headerTitle="Conversations" />;
+    const component = <ChatHistoryExample showCloseAction={false} searchOff={false} headerTitle="Conversations" />;
 
     return { historyPanelElement: component };
   }, [instance]);
