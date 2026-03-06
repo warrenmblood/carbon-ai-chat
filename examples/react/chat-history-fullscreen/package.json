@@ -13,9 +13,8 @@
   "license": "Apache-2.0",
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "dependencies": {
-    "@carbon/ai-chat": "^1.7.0",
-    "@carbon/ai-chat-components": "^0.9.0",
-    "@carbon/icons-react": "^11.53.0",
+    "@carbon/ai-chat": "file:/Users/warren/dev/carbon-ai-chat/packages/ai-chat/carbon-ai-chat-1.7.0.tgz",
+    "@carbon/ai-chat-components": "file:/Users/warren/dev/carbon-ai-chat/packages/ai-chat-components/carbon-ai-chat-components-0.9.0.tgz",
     "@carbon/react": "^1.68.0",
     "@carbon/web-components": "^2.46.0",
     "lit": "^3.1.0",

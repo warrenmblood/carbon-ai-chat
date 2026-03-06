@@ -225,5 +225,3 @@ function ChatHistoryExample({
 }
 
 export { ChatHistoryExample };
-
-// Made with Bob

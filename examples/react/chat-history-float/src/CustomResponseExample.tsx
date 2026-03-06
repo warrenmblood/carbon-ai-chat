@@ -50,5 +50,3 @@ function CustomResponseExample({
 }
 
 export { CustomResponseExample };
-
-// Made with Bob

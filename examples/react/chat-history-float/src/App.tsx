@@ -49,6 +49,34 @@ const config: PublicConfig = {
 function App() {
   const [instance, setInstance] = useState<ChatInstance | null>(null);
   const [activeResponseId, setActiveResponseId] = useState<string | null>(null);
+  const [historyPanelOpen, setHistoryPanelOpen] = useState(false);
+
+  const floatModeConfig = {
+    ...config,
+    header: {
+      ...config.header,
+      menuOptions: [
+        {
+          text: "New chat",
+          handler: () => {
+            console.log("New chat clicked");
+          },
+        },
+        {
+          text: "View chats",
+          handler: () => {
+            setHistoryPanelOpen(true);
+            // Open the custom panel with history content
+            instance?.customPanels?.getPanel()?.open({
+              title: "Chat History",
+              hideBackButton: false,
+              fullWidth: true,
+            });
+          },
+        },
+      ],
+    },
+  };
 
   function onBeforeRender(instance: ChatInstance) {
     setInstance(instance);
@@ -92,7 +120,7 @@ function App() {
 
   const renderWriteableElements = useMemo(() => {
     if (!instance) {
-      return { historyPanelElement: null };
+      return { customPanelElement: null };
     }
 
     const component = (
@@ -103,12 +131,12 @@ function App() {
       />
     );
 
-    return { historyPanelElement: component };
+    return { customPanelElement: component };
   }, [instance]);
 
   return (
     <ChatContainer
-      {...config}
+      {...floatModeConfig}
       // Set the instance into state for usage.
       onBeforeRender={onBeforeRender}
       renderUserDefinedResponse={renderUserDefinedResponse}

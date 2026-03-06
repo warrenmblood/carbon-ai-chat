@@ -12,7 +12,6 @@ import {
   CustomSendMessageOptions,
   MessageRequest,
   MessageResponseTypes,
-  PartialItemChunkWithId,
   StreamChunk,
 } from "@carbon/ai-chat";
 
@@ -28,9 +27,6 @@ You can try the following responses:
 
 - stream text
 - text
-- user_defined
-
-The "text" response includes the configuration to include user feedback (thumbs up/down, etc) in this example. You can apply feedback to any response type.
 `;
 
 const TEXT =
@@ -64,18 +60,18 @@ def generate_lorem_ipsum(paragraphs=1):
         "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt "
         "mollit anim id est laborum."
     ).split()
-    
+
     # Function to generate a random sentence
     def random_sentence():
         sentence_length = random.randint(4, 12)
         sentence = random.sample(lorem_words, sentence_length)
         return " ".join(sentence).capitalize() + "."
-    
+
     # Function to generate a paragraph
     def random_paragraph():
         sentence_count = random.randint(3, 6)
         return " ".join(random_sentence() for _ in range(sentence_count))
-    
+        
     # Generate the requested number of paragraphs
     return "\\n\\n".join(random_paragraph() for _ in range(paragraphs))
 
@@ -93,7 +89,6 @@ async function doFakeTextStreaming(
   const responseID = crypto.randomUUID();
   const words = TEXT.split(" ");
   let isCanceled = false;
-  let lastStreamedIndex = -1;
   const timeouts: number[] = [];
 
   // Listen to abort signal (handles both stop button and restart/clear)
@@ -108,7 +103,6 @@ async function doFakeTextStreaming(
     words.forEach((word, index) => {
       const timeoutId = setTimeout(() => {
         if (!isCanceled) {
-          lastStreamedIndex = index;
           instance.messaging.addMessageChunk({
             partial_item: {
               response_type: MessageResponseTypes.TEXT,
@@ -121,18 +115,13 @@ async function doFakeTextStreaming(
             streaming_metadata: {
               response_id: responseID,
             },
-          } as PartialItemChunkWithId);
+          });
         }
       }, index * WORD_DELAY);
       timeouts.push(timeoutId as unknown as number);
     });
 
-    // Wait for streaming to complete or be cancelled
-    const totalDelay = words.length * WORD_DELAY;
-    const startTime = Date.now();
-    while (!isCanceled && Date.now() - startTime < totalDelay) {
-      await sleep(100);
-    }
+    await sleep(words.length * WORD_DELAY);
 
     if (!isCanceled) {
       const completeItem = {
@@ -160,14 +149,10 @@ async function doFakeTextStreaming(
         final_response: finalResponse,
       } as StreamChunk);
     } else {
-      // Send stream_stopped marker with the text that was actually streamed
-      const streamedText =
-        lastStreamedIndex >= 0
-          ? words.slice(0, lastStreamedIndex + 1).join(" ") + " "
-          : "";
+      // Send stream_stopped marker
       const completeItem = {
         response_type: MessageResponseTypes.TEXT,
-        text: streamedText,
+        text: words.slice(0, Math.floor(words.length * 0.3)).join(" "),
         streaming_metadata: {
           id: "1",
           stream_stopped: true,
@@ -178,17 +163,6 @@ async function doFakeTextStreaming(
         streaming_metadata: {
           response_id: responseID,
         },
-      } as StreamChunk);
-
-      const finalResponse = {
-        id: responseID,
-        output: {
-          generic: [completeItem],
-        },
-      };
-
-      instance.messaging.addMessageChunk({
-        final_response: finalResponse,
       } as StreamChunk);
     }
   } finally {
@@ -248,21 +222,6 @@ async function customSendMessage(
                      */
                     show_prompt: true,
                   },
-                },
-              },
-            ],
-          },
-        });
-        break;
-      case "user_defined":
-        instance.messaging.addMessage({
-          output: {
-            generic: [
-              {
-                response_type: MessageResponseTypes.USER_DEFINED,
-                user_defined: {
-                  user_defined_type: "my_unique_identifier",
-                  text: "Some text from your back-end.",
                 },
               },
             ],
