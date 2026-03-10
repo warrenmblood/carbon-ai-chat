@@ -81,42 +81,44 @@ function ChatHistoryExample({
     })),
   );
 
-  const handleSelectChat = 
-    (event: CustomEvent) => {
-      const itemId = event.detail.itemId;
+  const handleSelectChat = (event: CustomEvent) => {
+    const itemId = event.detail.itemId;
 
-      if (selectedId === itemId) {
-        return;
-      }
-
-      const itemExists =
-        pinnedItems.some((item) => item.id === itemId) ||
-        regularItems.some((section) =>
-          section.chats.some((chat) => chat.id === itemId),
-        );
-
-      if (itemExists) {
-        setSelectedId(itemId);
-        setPinnedItems((prev) =>
-          prev.map((item) => ({
-            ...item,
-            selected: item.id === itemId,
-          })),
-        );
-
-        setRegularItems((prev) =>
-          prev.map((section) => ({
-            ...section,
-            chats: section.chats.map((chat) => ({
-              ...chat,
-              selected: chat.id === itemId,
-            })),
-          })),
-        );
-
-        loadChat(event);
-      }
+    if (selectedId === itemId) {
+      return;
     }
+
+    const itemExists =
+      pinnedItems.some((item) => item.id === itemId) ||
+      regularItems.some((section) =>
+        section.chats.some((chat) => chat.id === itemId),
+      );
+
+    if (itemExists) {
+      setSelectedId(itemId);
+
+      // Update pinned items
+      setPinnedItems((prev) =>
+        prev.map((item) => ({
+          ...item,
+          selected: item.id === itemId,
+        })),
+      );
+
+      // Update regular items
+      setRegularItems((prev) =>
+        prev.map((section) => ({
+          ...section,
+          chats: section.chats.map((chat) => ({
+            ...chat,
+            selected: chat.id === itemId,
+          })),
+        })),
+      );
+
+      loadChat(event)
+    }
+  };
 
   // Returns index that a chat item should be inserted within section ordered by descending lastUpdated timestamp
   const getIndexByTimestamp = (items: resultItem[], timestamp: number) => {
@@ -242,51 +244,84 @@ function ChatHistoryExample({
     setItemToDelete(null);
   }, [itemToDelete]);
 
-  const handleSearchInput = useCallback((event: any) => {
-    const searchVal = event.detail.value.toLowerCase();
+  const handleRenameSave = useCallback((event: CustomEvent) => {
+    const itemId = event.detail.itemId;
+    if (itemId) {
+      setPinnedItems((prev) =>
+        prev.map((chat) =>
+          chat.id === itemId
+            ? {
+                ...chat,
+                title: event.detail.newTitle,
+              }
+            : chat,
+        ),
+      );
 
-    // Combine all results into a single array
-    const results: any[] = [];
+      setRegularItems((prev) =>
+        prev.map((section) => ({
+          ...section,
+          chats: section.chats.map((chat) =>
+            chat.id === itemId
+              ? {
+                  ...chat,
+                  title: event.detail.newTitle,
+                }
+              : chat,
+          ),
+        })),
+      );
+    }
+  }, []);
 
-    // Add matching pinned items
-    pinnedHistoryItems.forEach((item) => {
-      if (item.title.toLowerCase().includes(searchVal)) {
-        results.push({
-          ...item,
-          isPinned: true,
-        });
-      }
-    });
+  const handleSearchInput = useCallback(
+    (event: any) => {
+      const searchVal = event.detail.value.toLowerCase();
 
-    // Add matching history items
-    historyItems.forEach((section) => {
-      section.chats.forEach((chat) => {
-        if (chat.title.toLowerCase().includes(searchVal)) {
+      // Combine all results into a single array
+      const results: any[] = [];
+
+      // Add matching pinned items
+      pinnedItems.forEach((item) => {
+        if (item.title.toLowerCase().includes(searchVal)) {
           results.push({
-            ...chat,
-            section: section.section,
-            isPinned: false,
+            ...item,
+            isPinned: true,
           });
         }
       });
-    });
 
-    setSearchResults(results);
-    setSearchTotalCount(results.length);
-    setSearchValue(searchVal);
-  }, []);
+      // Add matching history items
+      regularItems.forEach((section) => {
+        section.chats.forEach((chat) => {
+          if (chat.title.toLowerCase().includes(searchVal)) {
+            results.push({
+              ...chat,
+              section: section.section,
+              isPinned: false,
+            });
+          }
+        });
+      });
+
+      setSearchResults(results);
+      setSearchTotalCount(results.length);
+      setSearchValue(searchVal);
+    },
+    [pinnedItems, regularItems],
+  );
 
   const showSearchResults = searchTotalCount > 0 && searchValue;
   const noSearchResults = searchTotalCount === 0 && searchValue;
 
   return (
-    <HistoryShell className="history-shell">
+    <HistoryShell>
       <HistoryHeader title={headerTitle} showCloseAction={showCloseAction} />
       <HistoryToolbar
         searchOff={searchOff}
         onCdsSearchInput={handleSearchInput}
       />
-      <HistoryContent className="history-content">
+      <HistoryContent>
         {(showSearchResults || noSearchResults) && (
           <div slot="results-count">Results: {searchTotalCount}</div>
         )}
@@ -322,8 +357,9 @@ function ChatHistoryExample({
                       selected={item.selected}
                       rename={item.rename}
                       actions={pinnedHistoryItemActions}
-                      onHistoryItemMenuAction={handleHistoryItemAction}
-                      onHistoryItemSelected={handleSelectChat}
+                      onMenuAction={handleHistoryItemAction}
+                      onSelected={handleSelectChat}
+                      onRenameSave={handleRenameSave}
                     />
                   ))}
                 </HistoryPanelMenu>
@@ -342,8 +378,9 @@ function ChatHistoryExample({
                         selected={chat.selected}
                         rename={chat.rename}
                         actions={historyItemActions}
-                        onHistoryItemMenuAction={handleHistoryItemAction}
-                        onHistoryItemSelected={handleSelectChat}
+                        onMenuAction={handleHistoryItemAction}
+                        onSelected={handleSelectChat}
+                        onRenameSave={handleRenameSave}
                       />
                     ))}
                   </HistoryPanelMenu>

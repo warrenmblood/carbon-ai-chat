@@ -49,11 +49,11 @@ const createPlugins = (includeAnalysis) => {
 };
 
 export default () => {
-  const port = process.env.PORT || 3003;
+  const port = process.env.PORT || 3006;
 
   return {
     mode: environment,
-    entry: "./src/App.tsx",
+    entry: "./src/main.ts",
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "bundle.js",
@@ -74,10 +74,12 @@ export default () => {
           use: {
             loader: "babel-loader",
             options: {
-              presets: [
-                "@babel/preset-env",
-                "@babel/preset-react",
-                "@babel/preset-typescript",
+              presets: ["@babel/preset-env", "@babel/preset-typescript"],
+              plugins: [
+                ["@babel/plugin-proposal-decorators", { version: "2023-05" }],
+                "@babel/plugin-proposal-class-properties",
+                "@babel/plugin-transform-private-methods",
+                "@babel/plugin-transform-class-static-block",
               ],
             },
           },
