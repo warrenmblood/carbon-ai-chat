@@ -376,6 +376,11 @@ export interface LayoutConfig {
   corners?: CornersType;
 
   /**
+   * Indicates if the chat history panel should be shown.
+   */
+  showHistory?: boolean;
+
+  /**
    * CSS variable overrides for the chat UI. This is a convienience method, you may also set these properties via CSS.
    *
    * Keys correspond to values from `LayoutCustomProperties` (e.g. `LayoutCustomProperties.height`),

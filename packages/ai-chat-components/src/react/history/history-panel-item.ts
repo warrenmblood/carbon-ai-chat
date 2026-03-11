@@ -18,8 +18,10 @@ const HistoryPanelItem = withWebComponentBridge(
     elementClass: CDSAIChatHistoryPanelItem,
     react: React,
     events: {
-      onHistoryItemMenuAction: "history-item-menu-action",
-      onHistoryItemSelected: "history-item-selected",
+      onMenuAction: "history-item-menu-action",
+      onSelected: "history-item-selected",
+      onRenameCancel: "history-item-rename-cancel",
+      onRenameSave: "history-item-rename-save",
     },
   }),
 );

@@ -160,24 +160,48 @@ class CDSAIChatHistoryPanelItem extends HostListenerMixin(
     }
   };
 
-  updated() {
-    if (this.input) {
-      this.input.addEventListener(
-        `${prefix}-history-panel-item-input-cancel`,
-        () => {
-          this.rename = false;
-        },
-      );
+  /**
+   * Handle input save event from child component
+   */
+  @HostListener("history-panel-item-input-save")
+  // @ts-ignore: The decorator refers to this method but TS thinks this method is not referred to
+  private _handleInputSave(event: CustomEvent) {
+    const newTitle = event.detail.newTitle;
+    this.title = newTitle;
+    this.rename = false;
 
-      this.input.addEventListener(
-        `${prefix}-history-panel-item-input-save`,
-        (event) => {
-          const newTitle = (event as CustomEvent).detail.newTitle;
-          this.title = newTitle;
-          this.rename = false;
-        },
-      );
-    }
+    const init = {
+      bubbles: true,
+      composed: true,
+      detail: {
+        newTitle,
+        itemId: this.id,
+      },
+    };
+    const renameSaveEvent = new CustomEvent("history-item-rename-save", init);
+    this.dispatchEvent(renameSaveEvent);
+  }
+
+  /**
+   * Handle input cancel event from child component
+   */
+  @HostListener("history-panel-item-input-cancel")
+  // @ts-ignore: The decorator refers to this method but TS thinks this method is not referred to
+  private _handleInputCancel() {
+    this.rename = false;
+
+    const init = {
+      bubbles: true,
+      composed: true,
+      detail: {
+        itemId: this.id,
+      },
+    };
+    const renameCancelEvent = new CustomEvent(
+      "history-item-rename-cancel",
+      init,
+    );
+    this.dispatchEvent(renameCancelEvent);
   }
 
   render() {

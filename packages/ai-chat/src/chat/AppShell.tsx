@@ -479,6 +479,7 @@ export default function AppShell({
               contentMaxWidth={layout.hasContentMaxWidth}
               showWorkspace={workspacePanelState.isOpen}
               workspaceLocation={workspacePanelState.options.preferredLocation}
+              showHistory={layout?.showHistory ?? false}
               workspaceAriaLabel={languagePack.aria_workspaceRegion}
               historyAriaLabel={languagePack.aria_historyRegion}
               messagesAriaLabel={languagePack.aria_messagesRegion}
@@ -608,6 +609,14 @@ export default function AppShell({
                   slotName={WriteableElementName.WORKSPACE_PANEL_ELEMENT}
                   className="cds-aichat--workspace-writeable-element cds-aichat--widget--expand-to-fit"
                   id={`workspacePanelElement${serviceManager.namespace.suffix}`}
+                />
+              </div>
+
+              <div slot="history" className="cds-aichat--widget--expand-to-fit">
+                <WriteableElement
+                  slotName={WriteableElementName.HISTORY_PANEL_ELEMENT}
+                  className="cds-aichat--history-writeable-element cds-aichat--widget--expand-to-fit"
+                  id={`historyPanelElement${serviceManager.namespace.suffix}`}
                 />
               </div>
             </ChatShell>
