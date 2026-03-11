@@ -1,0 +1,69 @@
+import { ArgTypes, Canvas, Markdown, Meta } from '@storybook/addon-docs/blocks';
+
+import { cdnJs, cdnCss } from "../../../globals/internal/storybook-cdn";
+import * as FeedbackStories from "./feedback.stories";
+
+<Meta of={FeedbackStories} parameters={{ previewTabs: { "storybook/docs/panel": { title: "Overview" } } }} />
+
+# Feedback
+
+[Source code](https://github.com/carbon-design-system/carbon-ai-chat/tree/main/packages/ai-chat-components/src/components/feedback) &nbsp;|&nbsp; [Feedback](https://github.com/carbon-design-system/carbon-ai-chat/issues)
+
+
+## Table of Contents
+- [Overview](#overview)
+- [Component API](#component-api)
+- [JS (via import)](#js-via-import)
+- [JS (via CDN)](#js-via-cdn)
+- [Feedback](#feedback)
+
+## Overview
+
+Use `cds-aichat-feedback` to collect structured feedback on AI responses. It supports category chips, optional freeform text, prompt copy, and read-only display for previously submitted feedback.
+
+### Getting started
+
+Here's a quick example to get you started.
+
+```html
+<script type="module">
+  const panel = document.querySelector("cds-aichat-feedback");
+  panel.categories = ["Accurate", "Helpful", "Too verbose", "Inappropriate"];
+  panel.addEventListener("feedback-submit", (event) => {
+    console.log("Submitted feedback:", event.detail);
+  });
+  panel.addEventListener("feedback-close", () => {
+    console.log("Closed without submitting");
+  });
+</script>
+
+<cds-aichat-feedback
+  id="feedback-panel"
+  is-open
+  title="Tell us what you think"
+  prompt="Help us improve this response"
+  text-area-placeholder="What worked well? What missed the mark?"
+  cancel-label="Cancel"
+  submit-label="Submit"
+  show-text-area
+  show-prompt
+></cds-aichat-feedback>
+```
+
+## Component API
+
+<ArgTypes of="cds-aichat-feedback" />
+
+## JS (via import)
+
+```javascript
+import "@carbon/ai-chat-components/es/components/feedback/index.js";
+```
+
+
+<Markdown>{`${cdnJs(["feedback"])}`}</Markdown>
+<Markdown>{`${cdnCss()}`}</Markdown>
+
+## Feedback
+
+Open an issue at https://github.com/carbon-design-system/carbon-ai-chat/issues to provide feedback or request changes.

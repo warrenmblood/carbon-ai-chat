@@ -1,0 +1,174 @@
+/*
+ *  Copyright IBM Corp. 2025
+ *
+ *  This source code is licensed under the Apache-2.0 license found in the
+ *  LICENSE file in the root directory of this source tree.
+ */
+
+@use "sass:string";
+
+@use "@carbon/styles/scss/components/code-snippet/index";
+@use "@carbon/styles/scss/type";
+@use "@carbon/layout";
+@use "@carbon/styles/scss/motion";
+@use "@carbon/styles/scss/themes";
+@use "@carbon/styles/scss/theme";
+@use "@carbon/styles/scss/colors";
+@use "@carbon/styles/scss/spacing";
+@use "@carbon/styles/scss/utilities/focus-outline" as *;
+@use "../../../globals/scss/vars" as *;
+@use "../../../globals/scss/modifiers" as *;
+
+:host-context([data-theme="white"]),
+:host-context([storybook-carbon-theme="white"]),
+:host-context([data-theme="g10"]),
+:host-context([storybook-carbon-theme="g10"]),
+:host {
+  @include rounded-modifiers;
+
+  // Automatically output all syntax-* tokens from the Carbon $white theme
+  @each $token, $value in themes.$white {
+    @if string.index($token, "syntax-") == 1 {
+      --cds-#{$token}: #{$value};
+    }
+  }
+}
+
+.#{$prefix}--snippet {
+  @extend .#{$cds-prefix}--snippet;
+  @extend .#{$cds-prefix}--snippet--multi;
+
+  @include rounded-self;
+
+  display: block;
+  padding: 0;
+
+  background: theme.$background;
+  max-inline-size: 100%;
+}
+
+:host-context([data-theme="g90"]),
+:host-context([storybook-carbon-theme="g90"]),
+:host-context([data-theme="g100"]),
+:host-context([storybook-carbon-theme="g100"]) {
+  @each $token, $value in themes.$g90 {
+    @if string.index($token, "syntax-") == 1 {
+      --cds-#{$token}: #{$value};
+    }
+  }
+}
+
+:host([disabled]) {
+  @extend .#{$cds-prefix}--snippet--disabled;
+
+  .#{$prefix}--snippet-container {
+    cursor: not-allowed;
+  }
+
+  .cm-editor {
+    pointer-events: none;
+  }
+}
+
+:host([hide-copy-button]) {
+  @extend .#{$cds-prefix}--snippet--no-copy;
+}
+
+:host([wrap-text]) {
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}
+
+.#{$prefix}--snippet-container {
+  @extend .#{$cds-prefix}--snippet-container;
+
+  position: relative;
+}
+
+:host([expanded-code]) .#{$prefix}--snippet-container {
+  padding-block-end: spacing.$spacing-05;
+  transition: max-height motion.$duration-moderate-01
+    motion(standard, productive);
+}
+
+.#{$prefix}--snippet--codemirror {
+  ::slotted(*) {
+    display: none;
+  }
+  .#{$prefix}--code-editor {
+    block-size: 100%;
+    inline-size: 100%;
+  }
+}
+
+.#{$prefix}--snippet__editor-skeleton {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: spacing.$spacing-05;
+  background: theme.$layer-01;
+  inset: 0;
+  pointer-events: none;
+
+  cds-skeleton-text {
+    inline-size: 100%;
+  }
+}
+
+.#{$prefix}--visually-hidden {
+  display: none;
+}
+
+.#{$prefix}--snippet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: theme.$layer-01;
+  border-block-end: 1px solid theme.$border-subtle-02;
+  padding-inline-start: layout.$spacing-05;
+}
+
+.#{$prefix}--snippet__meta {
+  display: flex;
+}
+
+.#{$prefix}--snippet__footer {
+  display: flex;
+  justify-content: flex-end;
+  border-block-start: 1px solid theme.$border-subtle-02;
+}
+
+.#{$prefix}--snippet-btn--text {
+  color: theme.$text-primary;
+}
+
+.#{$prefix}--snippet__language,
+.#{$prefix}--snippet__header-separator,
+.#{$prefix}--snippet__linecount {
+  @include type.type-style("label-01");
+}
+
+.#{$prefix}--snippet__header-separator {
+  padding-inline-end: layout.$spacing-02;
+  padding-inline-start: layout.$spacing-02;
+}
+
+.#{$prefix}--snippet-container--collapsed {
+  overflow-x: auto;
+  overflow-y: hidden;
+  transition: max-height motion.$duration-moderate-01
+    motion(standard, productive);
+}
+
+.#{$prefix}--icon-chevron--down {
+  transform: rotate(0deg);
+  transition: transform motion.$transition-expansion;
+}
+
+:host([expanded-code]) .#{$prefix}--icon-chevron--down {
+  transform: rotate(180deg);
+  transition: transform motion.$transition-expansion;
+}

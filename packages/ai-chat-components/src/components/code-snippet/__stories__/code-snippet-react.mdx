@@ -1,0 +1,98 @@
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as CodeSnippetReactStories from "./code-snippet-react.stories";
+
+<Meta of={CodeSnippetReactStories} parameters={{ previewTabs: { "storybook/docs/panel": { title: "Overview" } } }} />
+
+# Code snippet
+
+[Source code](https://github.com/carbon-design-system/carbon-ai-chat/tree/main/packages/ai-chat-components/src/components/code-snippet) &nbsp;|&nbsp; [Feedback](https://github.com/carbon-design-system/carbon-ai-chat/issues)
+
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+
+## Overview
+
+The `<CodeSnippet>` and `<CodeSnippetCard>` components wrap the `cds-aichat-code-snippet` web component to provide syntax highlighting, streaming updates, and editable code blocks inside React applications.
+
+### Getting started
+
+Here's a quick example to get you started.
+
+```jsx
+import CodeSnippet from "@carbon/ai-chat-components/es/react/code-snippet.js";
+import CodeSnippetCard from "@carbon/ai-chat-components/es/react/code-snippet-card.js";
+
+function ReadOnlySnippet({ code }) {
+  return (
+    <CodeSnippet highlight wrapText>
+      {code}
+    </CodeSnippet>
+  );
+}
+```
+
+## Component API
+
+<ArgTypes of={CodeSnippetReactStories.Default} />
+
+### `<CodeSnippetCard>` props
+
+Note: The tile container forwards all props to the inner `<CodeSnippet>` and applies AI Chat tile styling.
+
+<ArgTypes of={CodeSnippetReactStories.Default} />
+
+### Streaming Content
+
+Use the streaming stories to see how the component responds to real-time content updates.
+
+### Usage Patterns
+
+#### Streaming With AI Responses
+
+```jsx
+function StreamingSnippet({ stream }) {
+  const [content, setContent] = React.useState("");
+
+  React.useEffect(() => {
+    const subscription = stream.subscribe((chunk) =>
+      setContent((previous) => previous + chunk),
+    );
+    return () => subscription.unsubscribe();
+  }, [stream]);
+
+  return (
+    <CodeSnippetCard highlight wrapText>
+      {content}
+    </CodeSnippetCard>
+  );
+}
+```
+
+#### Editable Playground
+
+```jsx
+function EditableSnippet() {
+  const [content, setContent] = React.useState("// Start typing...");
+
+  return (
+    <CodeSnippet
+      editable
+      highlight
+      onChange={(event) => {
+        setContent(event.detail.value);
+      }}
+    >
+      {content}
+    </CodeSnippet>
+  );
+}
+```
+
+## Feedback
+
+Open an issue at https://github.com/carbon-design-system/carbon-ai-chat/issues to provide feedback or request changes.

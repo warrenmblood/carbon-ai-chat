@@ -1,0 +1,57 @@
+import { ArgTypes, Canvas, Markdown, Meta } from '@storybook/addon-docs/blocks';
+
+import { cdnJs, cdnCss } from "../../../globals/internal/storybook-cdn";
+import * as MarkdownStories from "./markdown.stories";
+
+<Meta of={MarkdownStories} parameters={{ previewTabs: { "storybook/docs/panel": { title: "Overview" } } }} />
+
+# Markdown
+
+[Source code](https://github.com/carbon-design-system/carbon-ai-chat/tree/main/packages/ai-chat-components/src/components/markdown) &nbsp;|&nbsp; [Feedback](https://github.com/carbon-design-system/carbon-ai-chat/issues)
+
+
+## Table of Contents
+- [Overview](#overview)
+- [Component API](#component-api)
+- [JS (via import)](#js-via-import)
+- [JS (via CDN)](#js-via-cdn)
+- [Feedback](#feedback)
+
+## Overview
+
+Use `cds-aichat-markdown` to render AI responses with a predictable set of Markdown features plus optional HTML sanitization. It supports headings, lists, code blocks with language detection, tables, callouts, and custom link attributes.
+
+### Getting started
+
+Here's a quick example to get you started.
+
+```html
+<cds-aichat-markdown>
+## Response
+
+Here is a **formatted** answer with a link to the [docs](https://carbondesignsystem.com){target=_blank rel=noopener}.
+
+> Remember to set your API key before calling the service.
+
+* Item one
+* Item two
+</cds-aichat-markdown>
+```
+
+## Component API
+
+<ArgTypes of="cds-aichat-markdown" />
+
+## JS (via import)
+
+```javascript
+import "@carbon/ai-chat-components/es/components/markdown/index.js";
+```
+
+
+<Markdown>{`${cdnJs(["markdown"])}`}</Markdown>
+<Markdown>{`${cdnCss()}`}</Markdown>
+
+## Feedback
+
+Open an issue at https://github.com/carbon-design-system/carbon-ai-chat/issues to provide feedback or request changes.

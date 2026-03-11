@@ -1,0 +1,49 @@
+import { ArgTypes, Markdown, Meta } from '@storybook/addon-docs/blocks';
+import * as ProcessingReactStories from "./processing-react.stories.jsx";
+
+<Meta of={ProcessingReactStories} parameters={{ previewTabs: { "storybook/docs/panel": { title: "Overview" } } }} />
+
+# Processing
+
+[Source code](https://github.com/carbon-design-system/carbon-ai-chat/tree/main/packages/ai-chat-components/src/components/processing) &nbsp;|&nbsp; [Feedback](https://github.com/carbon-design-system/carbon-ai-chat/issues)
+
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Component API](#component-api)
+- [Feedback](#feedback)
+
+
+## Overview
+
+Use `<Processing>` to show a compact AI loading indicator in React while work completes. Choose between the quick-load pulse or a looping linear animation depending on how long your task might take.
+
+### Getting started
+
+Here's a quick example to get you started.
+
+```jsx
+import Processing from "@carbon/ai-chat-components/es/react/processing.js";
+
+function LoadingState() {
+  return <Processing quickLoad />;
+}
+
+function LinearProgress() {
+  return <Processing loop />;
+}
+```
+
+## Component API
+
+<ArgTypes of={ProcessingReactStories.QuickLoad} />
+
+#### Props
+
+- `quickLoad`: Enables the quick load animation.
+- `loop`: Enables the continuous linear animation.
+
+## Feedback
+
+Open an issue at https://github.com/carbon-design-system/carbon-ai-chat/issues to provide feedback or request changes.
