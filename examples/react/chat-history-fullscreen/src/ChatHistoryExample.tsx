@@ -116,7 +116,7 @@ function ChatHistoryExample({
         })),
       );
 
-      loadChat(event)
+      loadChat(event);
     }
   };
 
