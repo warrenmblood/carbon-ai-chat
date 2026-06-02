@@ -22,16 +22,16 @@ import type {
 const ICON_SIZE = 16;
 
 /**
- * Transforms a single SuggestionItem's icon to CarbonIcon format when a
+ * Transforms a single SuggestionItem's avatar to CarbonIcon format when a
  * React component was supplied.
  */
 function transformItemIcon(item: SuggestionItem): SuggestionItem {
-  if (!item.icon) {
+  if (!item.avatar || typeof item.avatar === "string") {
     return item;
   }
   return {
     ...item,
-    icon: transformReactIconToCarbonIcon(item.icon, ICON_SIZE),
+    avatar: transformReactIconToCarbonIcon(item.avatar, ICON_SIZE),
   };
 }
 

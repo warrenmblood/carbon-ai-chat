@@ -340,6 +340,10 @@ class InputShellElement extends LitElement {
       "cds-aichat-autocomplete-dismiss",
       this._handleAutocompleteDismiss,
     );
+    this.addEventListener(
+      "cds-aichat-autocomplete-send",
+      this._handleAutocompleteSend as EventListener,
+    );
   }
 
   disconnectedCallback() {
@@ -352,6 +356,10 @@ class InputShellElement extends LitElement {
     this.removeEventListener(
       "cds-aichat-autocomplete-dismiss",
       this._handleAutocompleteDismiss,
+    );
+    this.removeEventListener(
+      "cds-aichat-autocomplete-send",
+      this._handleAutocompleteSend as EventListener,
     );
 
     // Tear down PM before removing autocomplete DOM; the PM view's destructor
@@ -562,6 +570,22 @@ class InputShellElement extends LitElement {
 
   private _handleAutocompleteDismiss = () => {
     this.dismissTrigger();
+  };
+
+  private _handleAutocompleteSend = (
+    event: CustomEvent<{ text: string }>,
+  ) => {
+    // Dismiss the autocomplete
+    this.dismissTrigger();
+
+    // Dispatch the send event with the text from the suggestion
+    this.dispatchEvent(
+      new CustomEvent<SendEventDetail>("cds-aichat-input-send", {
+        detail: { text: event.detail.text },
+        bubbles: true,
+        composed: true,
+      }),
+    );
   };
 
   // -----------------------------------------------------------------------

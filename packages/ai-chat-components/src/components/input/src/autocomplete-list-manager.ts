@@ -71,18 +71,23 @@ export class AutocompleteListManager {
         // Fall back to the built-in list so typeahead remains usable when a
         // consumer's custom renderer throws.
         console.error("Error in renderCustomList:", error);
-        this._renderBuiltInList(host, autocompleteItems);
+        this._renderBuiltInList(host, autocompleteItems, triggerState);
       }
     } else {
-      this._renderBuiltInList(host, autocompleteItems);
+      this._renderBuiltInList(host, autocompleteItems, triggerState);
     }
   }
 
-  private _renderBuiltInList(host: HTMLElement, items: SuggestionItem[]) {
+  private _renderBuiltInList(
+    host: HTMLElement,
+    items: SuggestionItem[],
+    triggerState: TriggerChangeEventDetail | null,
+  ) {
     const autocomplete = document.createElement(
       "cds-aichat-autocomplete",
     ) as AutocompleteElement;
     autocomplete.items = items;
+    autocomplete.inputText = triggerState?.query || "";
     autocomplete.slot = "autocomplete-content";
     this._customListElement = autocomplete;
     host.appendChild(autocomplete);
