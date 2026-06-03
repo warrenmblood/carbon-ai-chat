@@ -19,8 +19,14 @@ import styles from "./autocomplete.scss?lit";
 import "./autocomplete-item.js";
 import "./autocomplete-item-group.js";
 
-import type { SuggestionItem, SuggestionItemGroup } from "../../input/src/types.js";
-export type { SuggestionItem, SuggestionItemGroup } from "../../input/src/types.js";
+import type {
+  SuggestionItem,
+  SuggestionItemGroup,
+} from "../../input/src/tiptap/types.js";
+export type {
+  SuggestionItem,
+  SuggestionItemGroup,
+} from "../../input/src/tiptap/types.js";
 
 /**
  * Configuration for the autocomplete header
@@ -119,7 +125,10 @@ class AutocompleteElement extends LitElement {
    */
   private _getTotalItemCount(): number {
     const flatCount = this.items.length;
-    const groupedCount = this.groups.reduce((sum, group) => sum + group.items.length, 0);
+    const groupedCount = this.groups.reduce(
+      (sum, group) => sum + group.items.length,
+      0,
+    );
     return flatCount + groupedCount;
   }
 
@@ -151,10 +160,7 @@ class AutocompleteElement extends LitElement {
     switch (event.key) {
       case "ArrowDown":
         event.preventDefault();
-        this._focusedIndex = Math.min(
-          this._focusedIndex + 1,
-          totalItems - 1,
-        );
+        this._focusedIndex = Math.min(this._focusedIndex + 1, totalItems - 1);
         this._scrollToFocusedItem();
         break;
 
@@ -271,7 +277,7 @@ class AutocompleteElement extends LitElement {
       <div
         class="cds-aichat--autocomplete"
         role="listbox"
-        aria-label="Suggestions"
+        aria-label="Autocomplete options"
       >
         ${this.headerConfig?.showHeader
           ? html`
@@ -290,7 +296,7 @@ class AutocompleteElement extends LitElement {
               </div>
             `
           : ""}
-        
+
         <!-- Render flat items first -->
         ${this.items.map((item) => {
           const itemIndex = currentIndex++;
@@ -307,7 +313,7 @@ class AutocompleteElement extends LitElement {
             ></cds-aichat-autocomplete-item>
           `;
         })}
-        
+
         <!-- Render grouped items -->
         ${this.groups.map((group) => {
           const groupStartIndex = currentIndex;
@@ -316,7 +322,8 @@ class AutocompleteElement extends LitElement {
             <cds-aichat-autocomplete-item-group
               .title="${group.title}"
               .items="${group.items}"
-              .focusedIndex="${this._focusedIndex >= groupStartIndex && this._focusedIndex < currentIndex
+              .focusedIndex="${this._focusedIndex >= groupStartIndex &&
+              this._focusedIndex < currentIndex
                 ? this._focusedIndex - groupStartIndex
                 : -1}"
               .startIndex="${groupStartIndex}"
