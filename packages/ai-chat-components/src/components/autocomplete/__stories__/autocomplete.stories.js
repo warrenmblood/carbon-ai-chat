@@ -59,9 +59,7 @@ export default {
   component: "cds-aichat-autocomplete",
   decorators: [
     (story) => html`
-      <div style="max-width: 400px; margin: 2rem;">
-        ${story()}
-      </div>
+      <div style="max-width: 400px; margin: 2rem;">${story()}</div>
     `,
   ],
 };

@@ -158,7 +158,6 @@ function stripPresentationFields(
     id: _id,
     label: _label,
     value: _value,
-    icon: _icon,
     avatar: _avatar,
     description: _description,
     disabled: _disabled,
@@ -167,7 +166,6 @@ function stripPresentationFields(
   void _id;
   void _label;
   void _value;
-  void _icon;
   void _avatar;
   void _description;
   void _disabled;
