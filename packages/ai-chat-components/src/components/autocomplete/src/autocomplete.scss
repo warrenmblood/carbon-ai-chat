@@ -31,6 +31,7 @@ $block-class: #{$prefix}-autocomplete;
     border-end-start-radius: var(--cds-aichat-border-radius-end-start, 0);
     border-start-end-radius: var(--cds-aichat-border-radius-start-end, 0);
     border-start-start-radius: var(--cds-aichat-border-radius-start-start, 0);
+    background: theme.$chat-prompt-background;
   }
 
   .#{$block-class}--header {

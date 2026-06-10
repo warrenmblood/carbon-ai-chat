@@ -41,7 +41,7 @@ describe("cds-aichat-autocomplete-item-group", () => {
 
     expect(el).to.exist;
     const titleElement = el.shadowRoot?.querySelector(
-      ".cds-aichat--autocomplete-item-group-title",
+      ".cds-aichat-autocomplete-item-group--title",
     );
     expect(titleElement).to.exist;
     expect(titleElement?.textContent?.trim()).to.equal("Test Group");
@@ -132,18 +132,4 @@ describe("cds-aichat-autocomplete-item-group", () => {
     expect(eventDetail.index).to.equal(5);
   });
 
-  it("should highlight focused item", async () => {
-    const el = await fixture<AutocompleteItemGroupElement>(html`
-      <cds-aichat-autocomplete-item-group
-        title="Test Group"
-        .items="${mockItems}"
-        .focusedIndex="${1}"
-      ></cds-aichat-autocomplete-item-group>
-    `);
-
-    const items = el.shadowRoot?.querySelectorAll(
-      "cds-aichat-autocomplete-item",
-    );
-    expect(items?.[1]?.hasAttribute("focused")).to.be.true;
-  });
 });

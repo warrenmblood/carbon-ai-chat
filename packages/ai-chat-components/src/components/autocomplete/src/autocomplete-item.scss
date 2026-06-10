@@ -55,7 +55,6 @@ $block-class: #{$prefix}-autocomplete-item;
 }
 
 :host {
-
   .#{$block-class}--content {
     display: flex;
     flex: 1;
@@ -91,6 +90,7 @@ $block-class: #{$prefix}-autocomplete-item;
 
   .#{$block-class}--send-button {
     visibility: hidden;
+    z-index: 1;
 
     &:hover {
       background: theme.$background-active;
@@ -112,7 +112,6 @@ $block-class: #{$prefix}-autocomplete-item;
   &::after {
     display: block;
     position: absolute;
-    z-index: -1;
     inset-block-end: 0;
     inset-inline: layout.$spacing-05;
     block-size: 1px;
@@ -120,7 +119,8 @@ $block-class: #{$prefix}-autocomplete-item;
     content: "";
   }
 
-  &:has(.#{$block-class}:hover)::after {
+  &:has(.#{$block-class}:hover)::after,
+  &:has(.#{$block-class}:focus)::after {
     display: none;
   }
 }
