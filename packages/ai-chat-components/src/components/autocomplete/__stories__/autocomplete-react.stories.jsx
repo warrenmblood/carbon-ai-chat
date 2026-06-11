@@ -49,8 +49,6 @@ const flatSuggestions = [
   },
 ];
 
-// Suggestion groups with avatars and descriptions
-// Using the same avatar icons from avatar-icons.js as the web components story
 const suggestionGroupsWithAvatars = [
   {
     id: "group-1",
@@ -125,7 +123,8 @@ export default {
     },
     attached: {
       control: "boolean",
-      description: "Whether the autocomplete is attached to another element (e.g., an input field). When true, the bottom corners will not be rounded.",
+      description:
+        "Whether the autocomplete is attached to another element (e.g., an input field). When true, the bottom corners will not be rounded.",
     },
   },
   args: {
@@ -146,7 +145,7 @@ export const Default = {
         ref.current.enableSendButton = args.enableSendButton ?? true;
       }
     }, [args.inputText, args.attached, args.enableSendButton]);
-    
+
     return (
       <Wrapper width="320px">
         <CDSAIChatAutocomplete
@@ -164,13 +163,16 @@ export const WithHeader = {
     React.useEffect(() => {
       if (ref.current) {
         ref.current.items = flatSuggestions;
-        ref.current.headerConfig = { showHeader: true, title: "Prompt suggestions" };
+        ref.current.headerConfig = {
+          showHeader: true,
+          title: "Prompt suggestions",
+        };
         ref.current.inputText = args.inputText || "";
         ref.current.attached = args.attached ?? true;
         ref.current.enableSendButton = args.enableSendButton ?? true;
       }
     }, [args.inputText, args.attached, args.enableSendButton]);
-    
+
     return (
       <Wrapper width="320px">
         <CDSAIChatAutocomplete
@@ -193,7 +195,7 @@ export const WithCategories = {
         ref.current.enableSendButton = args.enableSendButton ?? true;
       }
     }, [args.inputText, args.attached, args.enableSendButton]);
-    
+
     return (
       <Wrapper width="320px">
         <CDSAIChatAutocomplete
@@ -219,7 +221,7 @@ export const Detached = {
         ref.current.enableSendButton = args.enableSendButton ?? true;
       }
     }, [args.inputText, args.attached, args.enableSendButton]);
-    
+
     return (
       <Wrapper width="671px">
         <CDSAIChatAutocomplete
@@ -230,4 +232,3 @@ export const Detached = {
     );
   },
 };
-

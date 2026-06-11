@@ -115,7 +115,8 @@ export default {
     },
     attached: {
       control: "boolean",
-      description: "Whether the autocomplete is attached to another element (e.g., an input field). When true, the bottom corners will not be rounded.",
+      description:
+        "Whether the autocomplete is attached to another element (e.g., an input field). When true, the bottom corners will not be rounded.",
     },
   },
   args: {

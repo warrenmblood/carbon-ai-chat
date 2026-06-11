@@ -11,7 +11,10 @@ import { html } from "lit";
 import { fixture, expect } from "@open-wc/testing";
 import "../src/autocomplete.js";
 import type AutocompleteElement from "../src/autocomplete.js";
-import type { SuggestionItem, SuggestionItemGroup } from "../src/autocomplete.js";
+import type {
+  SuggestionItem,
+  SuggestionItemGroup,
+} from "../src/autocomplete.js";
 
 describe("cds-aichat-autocomplete", () => {
   const mockItems: SuggestionItem[] = [
@@ -46,9 +49,7 @@ describe("cds-aichat-autocomplete", () => {
 
   it("should render with items", async () => {
     const el = await fixture<AutocompleteElement>(html`
-      <cds-aichat-autocomplete
-        .items="${mockItems}"
-      ></cds-aichat-autocomplete>
+      <cds-aichat-autocomplete .items="${mockItems}"></cds-aichat-autocomplete>
     `);
 
     expect(el).to.exist;
@@ -133,9 +134,7 @@ describe("cds-aichat-autocomplete", () => {
 
   it("should emit select event when item is clicked", async () => {
     const el = await fixture<AutocompleteElement>(html`
-      <cds-aichat-autocomplete
-        .items="${mockItems}"
-      ></cds-aichat-autocomplete>
+      <cds-aichat-autocomplete .items="${mockItems}"></cds-aichat-autocomplete>
     `);
 
     let eventDetail: any = null;

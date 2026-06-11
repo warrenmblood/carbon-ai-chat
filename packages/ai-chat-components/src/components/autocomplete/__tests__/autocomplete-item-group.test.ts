@@ -131,5 +131,4 @@ describe("cds-aichat-autocomplete-item-group", () => {
     expect(eventDetail.item).to.deep.equal(mockItems[0]);
     expect(eventDetail.index).to.equal(5);
   });
-
 });
