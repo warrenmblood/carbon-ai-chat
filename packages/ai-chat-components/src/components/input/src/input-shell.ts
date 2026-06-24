@@ -64,6 +64,8 @@ class InputShellElement extends LitElement {
           <div class="${prefix}--input-uploads-and-autocomplete">
             <slot name="file-uploads"></slot>
             <slot name="autocomplete-content"></slot>
+          </div>
+          <div class="${prefix}--field-messaging-container">
             <slot name="field-messaging"></slot>
           </div>
           <div class="${prefix}--input-field-container">

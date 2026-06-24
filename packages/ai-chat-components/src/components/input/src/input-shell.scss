@@ -52,7 +52,7 @@
   min-block-size: 0;
   outline: button.$button-border-width solid transparent;
   outline-offset: -2px;
-  padding-block: layout.$spacing-04;
+  padding-block-end: layout.$spacing-04;
   padding-inline: layout.$spacing-05 layout.$spacing-03;
 }
 
@@ -92,6 +92,15 @@
 }
 
 // -----------------------------------------------------------
+// Field messaging row (used for error message)
+// -----------------------------------------------------------
+.#{$prefix}--field-messaging-container {
+  flex-basis: 100%;
+  inline-size: 100%;
+  margin-inline: 0;
+}
+
+// -----------------------------------------------------------
 // Field container (text area + char count) — shares a row with the send
 // control. `flex: 1` lets it consume all remaining space next to send.
 // -----------------------------------------------------------
@@ -108,13 +117,15 @@
   display: flex;
   align-items: center;
   gap: layout.$spacing-03;
+  margin-block-start: layout.$spacing-04;
 }
 
 ::slotted([slot="message-actions"]) {
   align-self: flex-start;
 }
 
-.#{$prefix}--input-container > *:not(:last-child) {
+.#{$prefix}--input-container
+  > *:not(:last-child):not(.#{$prefix}--field-messaging-container) {
   margin-inline-end: layout.$spacing-03;
 }
 
@@ -164,10 +175,7 @@
 // the autocomplete row — char-count exceeded, etc.)
 // -----------------------------------------------------------
 ::slotted([slot="field-messaging"]) {
-  @include type.type-style("helper-text-01");
-
   display: block;
-  color: theme.$support-error;
   padding-block-start: layout.$spacing-03;
 }
 
@@ -192,4 +200,5 @@
   display: flex;
   flex: 0 1;
   align-self: flex-start;
+  margin-block-start: layout.$spacing-04;
 }

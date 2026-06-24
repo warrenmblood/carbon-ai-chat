@@ -478,7 +478,11 @@ function Input(props: InputProps, ref: Ref<InputFunctions>) {
 
       {charCountMessage && (
         <div slot="field-messaging" role="status" aria-live="polite">
-          <ErrorMessage fullscreen expandable message={charCountMessage}></ErrorMessage>
+          <ErrorMessage
+            fullscreen
+            expandable
+            message={charCountMessage}
+          ></ErrorMessage>
         </div>
       )}
 
